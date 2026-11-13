@@ -14,6 +14,8 @@ export default defineConfig({
   // 版本号只维护 package.json（CI 会按 tag 改写它），界面里的版本由这里注入，避免写死后漂移
   define: {
     __APP_VERSION__: JSON.stringify(version),
+    // 诊断构建开关：CI 里 VITE_DIAG=1 时，App 会渲染诊断浮层（默认关闭，不影响正常包）
+    __DIAG__: JSON.stringify(process.env.VITE_DIAG === "1"),
   },
   server: {
     port: 1420,
