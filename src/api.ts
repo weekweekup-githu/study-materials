@@ -151,7 +151,9 @@ export async function selfTest(): Promise<string> {
     const hlsUrl = `${LOCAL}/hls?u=${encodeURIComponent(info.video_url)}`;
     const r1 = await fetch(hlsUrl);
     const txt = await r1.text();
-    steps.push(`hls:${r1.status}/${txt.length}/${txt.startsWith("#EXTM3U") ? "m3u8" : "bad"}`);
+    const ok1 = txt.startsWith("#EXTM3U");
+    steps.push(`hls:${r1.status}/${txt.length}/${ok1 ? "m3u8" : "bad"}`);
+    if (!ok1) steps.push(`hlsBody:${txt.replace(/\s+/g, " ").slice(0, 300)}`);
     const keyLine = txt.split("\n").find((l) => l.startsWith("#EXT-X-KEY"));
     if (keyLine) {
       const m = keyLine.match(/URI="([^"]+)"/);
